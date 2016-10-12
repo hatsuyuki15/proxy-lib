@@ -1,6 +1,6 @@
-package com.hatsuyuki.utils.proxy;
+package org.hatsuyuki.proxy;
 
-import com.hatsuyuki.utils.Json;
+import org.hatsuyuki.Json;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;

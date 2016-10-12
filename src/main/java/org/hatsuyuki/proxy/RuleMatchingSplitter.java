@@ -1,6 +1,6 @@
-package com.hatsuyuki.utils.proxy;
+package org.hatsuyuki.proxy;
 
-import com.hatsuyuki.utils.proxy.rule.Rule;
+import org.hatsuyuki.proxy.rule.Rule;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

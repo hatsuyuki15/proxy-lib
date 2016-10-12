@@ -1,4 +1,4 @@
-package com.hatsuyuki.utils.proxy;
+package org.hatsuyuki.proxy;
 
 /**
  * Created by Hatsuyuki.

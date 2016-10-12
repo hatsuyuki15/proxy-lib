@@ -1,9 +1,9 @@
-group 'com.hatsuyuki.utils'
-version '1.0-SNAPSHOT'
+group = "org.hatsuyuki"
 
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
+
 
 repositories {
     mavenCentral()

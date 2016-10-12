@@ -1,4 +1,4 @@
-package com.hatsuyuki.utils.proxy;
+package org.hatsuyuki.proxy;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -9,14 +9,10 @@ import java.util.Map;
 /**
  * Created by Hatsuyuki.
  */
-public class RemoteRequester extends Requester {
-    private final String proxyHost;
-    private final int proxyPort;
+public class LocalRequester extends Requester {
 
-    public RemoteRequester(String proxyHost, int proxyPort) {
+    public LocalRequester() {
         super(null);
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
     }
 
     @Override
@@ -37,8 +33,6 @@ public class RemoteRequester extends Requester {
         for (Request.KeyVal keyVal : request.data) {
             jsoupConnection = jsoupConnection.data(keyVal.key, keyVal.value);
         }
-
-        jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
         Connection.Response jsoupResponse = jsoupConnection.execute();
         return new Response(jsoupResponse);

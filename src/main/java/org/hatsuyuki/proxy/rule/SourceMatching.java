@@ -1,6 +1,6 @@
-package com.hatsuyuki.utils.proxy.rule;
+package org.hatsuyuki.proxy.rule;
 
-import com.hatsuyuki.utils.proxy.Request;
+import org.hatsuyuki.proxy.Request;
 
 import java.util.Objects;
 
