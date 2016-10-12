@@ -2,6 +2,8 @@ package com.hatsuyuki.utils.proxy;
 
 import org.jsoup.Connection;
 
+import java.util.Map;
+
 /**
  * Created by Hatsuyuki.
  */
@@ -10,6 +12,7 @@ public class Response {
     public String statusMessage;
     public String contentType;
     public String body;
+    public Map<String, String> headers;
 
     private Response() {}
 
@@ -18,5 +21,6 @@ public class Response {
         this.statusMessage = jsoupResponse.statusMessage();
         this.contentType   = jsoupResponse.contentType();
         this.body          = jsoupResponse.body();
+        this.headers       = jsoupResponse.headers();
     }
 }
