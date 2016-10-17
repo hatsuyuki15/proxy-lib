@@ -13,6 +13,7 @@ public class Response {
     public String contentType;
     public String body;
     public Map<String, String> headers;
+    public Map<String, String> cookies;
 
     private Response() {}
 
@@ -22,5 +23,6 @@ public class Response {
         this.contentType   = jsoupResponse.contentType();
         this.body          = jsoupResponse.body();
         this.headers       = jsoupResponse.headers();
+        this.cookies       = jsoupResponse.cookies();
     }
 }
