@@ -1,26 +1,24 @@
 package org.hatsuyuki.proxy;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Hatsuyuki.
  */
-public class Counter extends Pipeline{
-
-    private volatile int count = 0;
+public class Counter extends Pipeline {
+    private final AtomicInteger count = new AtomicInteger();
 
     public Counter(Pipeline nextPipeline) {
         super(nextPipeline);
     }
 
-    @Override
     public Response forward(Request request) throws IOException {
-        count += 1;
-        return nextPipeline.forward(request);
+        count.getAndIncrement();
+        return this.nextPipeline.forward(request);
     }
 
     public int getCount() {
-        return count;
+        return count.get();
     }
-
 }
