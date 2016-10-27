@@ -7,6 +7,7 @@ import org.jsoup.Connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -18,6 +19,8 @@ public class Proxy {
     private int port;
     private String clientID;
 
+    private int timeout = 600 * 1000; // default timeout is 10 minutes
+
     public Proxy(String host, int port, String clientID) throws Exception {
         this.host = host;
         this.port = port;
@@ -25,6 +28,14 @@ public class Proxy {
         if (!checkConnection()) {
             throw new Exception("Failed to connect to proxy server");
         }
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
     public boolean checkConnection() {
@@ -38,7 +49,8 @@ public class Proxy {
     }
 
     public Response request(Connection jsoupConnection)throws IOException {
-        Socket socket = new Socket(host, port);
+        Socket socket = new Socket();
+        socket.connect(new InetSocketAddress(host, port), timeout);
 
         Request request = new Request(jsoupConnection);
         request.source = this.clientID;
