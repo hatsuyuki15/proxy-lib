@@ -1,9 +1,9 @@
 ### Intellij
-.idea/
+/.idea/
 
 ### Gradle template
-.gradle
-build/
+/.gradle/
+/build/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
