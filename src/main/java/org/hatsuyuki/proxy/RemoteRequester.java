@@ -14,7 +14,7 @@ import java.util.Map;
 public class RemoteRequester extends Requester {
     private final static Logger LOGGER = LoggerFactory.getLogger(RemoteRequester.class);
 
-    private int maxRetry= 3;
+    private int maxNumOfRetry = 3;
 
     private final String proxyHost;
     private final int proxyPort;
@@ -25,8 +25,8 @@ public class RemoteRequester extends Requester {
         this.proxyPort = proxyPort;
     }
 
-    public void setMaxRetry(int maxRetry) {
-        this.maxRetry = maxRetry;
+    public void setMaxNumOfRetry(int maxNumOfRetry) {
+        this.maxNumOfRetry = maxNumOfRetry;
     }
 
     public int getMaxRetry(int maxRetry) {
@@ -53,19 +53,19 @@ public class RemoteRequester extends Requester {
         }
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
-        int retry = 0;
-        while (retry < maxRetry) {
-            retry++;
+        int numOfRetry = 0;
+        while (numOfRetry < maxNumOfRetry) {
             try {
                 Connection.Response jsoupResponse = jsoupConnection.execute();
                 return new Response(jsoupResponse);
             } catch (Exception e) {
-                if (retry < maxRetry) {
+                if (numOfRetry < maxNumOfRetry) {
                     LOGGER.info(e.getMessage() + " -> RETRY");
                 } else {
                     throw e;
                 }
             }
+            numOfRetry++;
         }
 
         return null;
