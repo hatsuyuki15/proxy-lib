@@ -2,6 +2,8 @@ package org.hatsuyuki.proxy;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -10,6 +12,10 @@ import java.util.Map;
  * Created by Hatsuyuki.
  */
 public class RemoteRequester extends Requester {
+    private final static Logger LOGGER = LoggerFactory.getLogger(RemoteRequester.class);
+
+    private int maxRetry= 3;
+
     private final String proxyHost;
     private final int proxyPort;
 
@@ -17,6 +23,14 @@ public class RemoteRequester extends Requester {
         super(null);
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
+    }
+
+    public void setMaxRetry(int maxRetry) {
+        this.maxRetry = maxRetry;
+    }
+
+    public int getMaxRetry(int maxRetry) {
+        return maxRetry;
     }
 
     @Override
@@ -37,10 +51,23 @@ public class RemoteRequester extends Requester {
         for (Request.KeyVal keyVal : request.data) {
             jsoupConnection = jsoupConnection.data(keyVal.key, keyVal.value);
         }
-
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
-        Connection.Response jsoupResponse = jsoupConnection.execute();
-        return new Response(jsoupResponse);
+        int retry = 0;
+        while (retry < maxRetry) {
+            retry++;
+            try {
+                Connection.Response jsoupResponse = jsoupConnection.execute();
+                return new Response(jsoupResponse);
+            } catch (Exception e) {
+                if (retry < maxRetry) {
+                    LOGGER.info(e.getMessage() + " -> RETRY");
+                } else {
+                    throw e;
+                }
+            }
+        }
+
+        return null;
     }
 }

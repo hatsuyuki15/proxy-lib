@@ -50,6 +50,7 @@ public class Proxy {
 
     public Response request(Connection jsoupConnection)throws IOException {
         Socket socket = new Socket();
+        socket.setSoTimeout(timeout);
         socket.connect(new InetSocketAddress(host, port), timeout);
 
         Request request = new Request(jsoupConnection);
