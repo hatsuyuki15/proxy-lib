@@ -13,9 +13,9 @@ public class BalanceSplitter extends Splitter{
 
     @Override
     public Response forward(Request request) throws IOException {
-        Pipeline pipeline = selectPipeline(request);
-
+        Pipeline pipeline;
         synchronized (activeConnectionsPerPipeline) {
+            pipeline = selectPipeline(request);
             int activeConnection = activeConnectionsPerPipeline.get(pipeline);
             activeConnection += 1;
             activeConnectionsPerPipeline.put(pipeline, activeConnection);
@@ -31,13 +31,11 @@ public class BalanceSplitter extends Splitter{
 
     @Override
     protected Pipeline selectPipeline(Request request) {
-        synchronized (activeConnectionsPerPipeline) {
-            int minActiveConnection = Collections.min(activeConnectionsPerPipeline.values());
-            for (Pipeline pipeline: activeConnectionsPerPipeline.keySet()) {
-                int activeConnection = activeConnectionsPerPipeline.get(pipeline);
-                if (activeConnection == minActiveConnection) {
-                    return pipeline;
-                }
+        int minActiveConnection = Collections.min(activeConnectionsPerPipeline.values());
+        for (Pipeline pipeline: activeConnectionsPerPipeline.keySet()) {
+            int activeConnection = activeConnectionsPerPipeline.get(pipeline);
+            if (activeConnection == minActiveConnection) {
+                return pipeline;
             }
         }
         return null;
