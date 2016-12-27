@@ -1,7 +1,8 @@
 package org.hatsuyuki.proxy;
 
-import org.hatsuyuki.Json;
 import org.apache.commons.io.IOUtils;
+import org.hatsuyuki.Json;
+import org.hatsuyuki.proxy.rule.AbstractProxy;
 import org.jsoup.Connection;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.net.Socket;
 /**
  * Created by Hatsuyuki.
  */
-public class Proxy {
+public class Proxy extends AbstractProxy {
     private static final String ENCODING = "UTF-8";
     private String host;
     private int port;
@@ -30,15 +31,7 @@ public class Proxy {
         }
     }
 
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    public boolean checkConnection() {
+    private boolean checkConnection() {
         try {
             Socket socket = new Socket(host, port);
             socket.close();
