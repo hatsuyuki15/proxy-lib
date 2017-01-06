@@ -1,4 +1,4 @@
-package org.hatsuyuki.proxy.rule;
+package org.hatsuyuki.proxy;
 
 import org.hatsuyuki.proxy.Response;
 import org.jsoup.Connection;

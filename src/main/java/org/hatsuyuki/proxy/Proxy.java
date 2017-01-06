@@ -2,7 +2,6 @@ package org.hatsuyuki.proxy;
 
 import org.apache.commons.io.IOUtils;
 import org.hatsuyuki.Json;
-import org.hatsuyuki.proxy.rule.AbstractProxy;
 import org.jsoup.Connection;
 
 import java.io.IOException;
