@@ -25,6 +25,13 @@ public class RemoteRequester extends Requester {
         this.proxyPort = proxyPort;
     }
 
+    public RemoteRequester(String proxyHost, int proxyPort, String username, String password) {
+        super(null);
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        ProxyAuthenticator.getInstance().addAuthentication(proxyHost, proxyPort, username, password);
+    }
+
     public void setMaxNumOfRetry(int maxNumOfRetry) {
         this.maxNumOfRetry = maxNumOfRetry;
     }
