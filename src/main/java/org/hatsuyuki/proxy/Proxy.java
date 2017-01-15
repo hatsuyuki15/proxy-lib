@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.hatsuyuki.Json;
 import org.jsoup.Connection;
 
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,25 +41,32 @@ public class Proxy extends AbstractProxy {
         return true;
     }
 
-    public Response request(Connection jsoupConnection)throws IOException {
-        Socket socket = new Socket();
-        socket.setSoTimeout(timeout);
-        socket.connect(new InetSocketAddress(host, port), timeout);
+    public Response request(Connection jsoupConnection)throws Exception {
+        Socket socket = null;
+        try {
+            socket = new Socket();
+            socket.setSoTimeout(timeout);
+            socket.connect(new InetSocketAddress(host, port), timeout);
 
-        Request request = new Request(jsoupConnection);
-        request.source = this.clientID;
+            Request request = new Request(jsoupConnection);
+            request.source = this.clientID;
 
-        OutputStream out = socket.getOutputStream();
-        String jsonRequest = Json.toString(request);
-        IOUtils.write(jsonRequest, out, ENCODING);
-        socket.shutdownOutput();
+            OutputStream out = socket.getOutputStream();
+            String jsonRequest = Json.toString(request);
+            IOUtils.write(jsonRequest, out, ENCODING);
+            socket.shutdownOutput();
 
-        InputStream in = socket.getInputStream();
-        String jsonResponse = IOUtils.toString(in, ENCODING);
-        Response response = Json.parse(jsonResponse, Response.class);
-        socket.shutdownInput();
+            InputStream in = socket.getInputStream();
+            String jsonResponse = IOUtils.toString(in, ENCODING);
+            Response response = Json.parse(jsonResponse, Response.class);
+            socket.shutdownInput();
+            socket.close();
 
-        socket.close();
-        return response;
+            return response;
+        } finally {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+        }
     }
 }
