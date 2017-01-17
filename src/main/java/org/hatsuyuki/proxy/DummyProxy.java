@@ -1,5 +1,6 @@
 package org.hatsuyuki.proxy;
 
+import org.hatsuyuki.proxy.exception.NetworkError;
 import org.jsoup.Connection;
 
 /**
@@ -12,6 +13,12 @@ public class DummyProxy extends AbstractProxy {
     public Response request(Connection jsoupConnection) throws Exception {
         Request request = new Request(jsoupConnection);
         request.source = "local";
-        return pipeline.forward(request);
+        Response response = pipeline.forward(request);
+
+        if (response.statusCode != 200) {
+            throw new NetworkError(String.format("HTTP Code = %s | Message = %s", response.statusCode, response.statusMessage));
+        }
+
+        return response;
     }
 }

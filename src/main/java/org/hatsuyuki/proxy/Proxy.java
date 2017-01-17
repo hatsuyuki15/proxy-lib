@@ -2,10 +2,9 @@ package org.hatsuyuki.proxy;
 
 import org.apache.commons.io.IOUtils;
 import org.hatsuyuki.Json;
+import org.hatsuyuki.proxy.exception.NetworkError;
 import org.jsoup.Connection;
 
-import java.io.Externalizable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -61,6 +60,10 @@ public class Proxy extends AbstractProxy {
             Response response = Json.parse(jsonResponse, Response.class);
             socket.shutdownInput();
             socket.close();
+
+            if (response.statusCode != 200) {
+                throw new NetworkError(String.format("HTTP Code = %s | Message = %s", response.statusCode, response.statusMessage));
+            }
 
             return response;
         } finally {

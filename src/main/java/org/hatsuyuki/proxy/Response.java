@@ -15,7 +15,7 @@ public class Response {
     public Map<String, String> headers;
     public Map<String, String> cookies;
 
-    private Response() {}
+    Response() {}
 
     public Response(Connection.Response jsoupResponse) {
         this.statusCode    = jsoupResponse.statusCode();

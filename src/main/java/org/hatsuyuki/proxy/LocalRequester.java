@@ -1,7 +1,10 @@
 package org.hatsuyuki.proxy;
 
 import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -10,6 +13,8 @@ import java.util.Map;
  * Created by Hatsuyuki.
  */
 public class LocalRequester extends Requester {
+    private final static Logger LOGGER = LoggerFactory.getLogger(LocalRequester.class);
+    private int maxNumOfRetry = 3;
 
     public LocalRequester() {
         super(null);
@@ -34,7 +39,23 @@ public class LocalRequester extends Requester {
             jsoupConnection = jsoupConnection.data(keyVal.key, keyVal.value);
         }
 
-        Connection.Response jsoupResponse = jsoupConnection.execute();
-        return new Response(jsoupResponse);
+        int numOfRetry = 0;
+        while (numOfRetry < maxNumOfRetry) {
+            try {
+                Connection.Response jsoupResponse = jsoupConnection.execute();
+                return new Response(jsoupResponse);
+            } catch (HttpStatusException e) {
+                Response response = new Response();
+                response.statusCode = e.getStatusCode();
+                response.statusMessage = e.getMessage();
+                return response;
+            } catch (IOException e) {
+                LOGGER.info(e.getMessage() + " -> RETRY");
+            }
+            numOfRetry++;
+        }
+
+        // excess max number of retries
+        throw new IOException(String.format("Unable to complete the request within %d retries", maxNumOfRetry));
     }
 }
