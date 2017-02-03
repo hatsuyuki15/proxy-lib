@@ -14,11 +14,17 @@ import java.util.Map;
  */
 public class LocalRequester extends Requester {
     private final static Logger LOGGER = LoggerFactory.getLogger(LocalRequester.class);
-    private int maxNumOfRetry = 3;
+    private int maxNumOfRetry;
+
+    public LocalRequester(int maxNumOfRetry) {
+        super(null);
+        this.maxNumOfRetry = maxNumOfRetry;
+    }
 
     public LocalRequester() {
-        super(null);
+        this(0);
     }
+
 
     @Override
     public Response forward(Request request) throws IOException {
@@ -40,7 +46,7 @@ public class LocalRequester extends Requester {
         }
 
         int numOfRetry = 0;
-        while (numOfRetry < maxNumOfRetry) {
+        while (numOfRetry <= maxNumOfRetry) {
             try {
                 Connection.Response jsoupResponse = jsoupConnection.execute();
                 return new Response(jsoupResponse);

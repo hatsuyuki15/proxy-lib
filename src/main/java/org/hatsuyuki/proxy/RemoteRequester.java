@@ -15,30 +15,32 @@ import java.util.Map;
 public class RemoteRequester extends Requester {
     private final static Logger LOGGER = LoggerFactory.getLogger(RemoteRequester.class);
 
-    private int maxNumOfRetry = 3;
+    private final int maxNumOfRetry;
 
     private final String proxyHost;
     private final int proxyPort;
 
-    public RemoteRequester(String proxyHost, int proxyPort) {
+    public RemoteRequester(String proxyHost, int proxyPort, int maxNumOfRetry) {
         super(null);
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
-    }
-
-    public RemoteRequester(String proxyHost, int proxyPort, String username, String password) {
-        super(null);
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
-        ProxyAuthenticator.getInstance().addAuthentication(proxyHost, proxyPort, username, password);
-    }
-
-    public void setMaxNumOfRetry(int maxNumOfRetry) {
         this.maxNumOfRetry = maxNumOfRetry;
     }
 
-    public int getMaxRetry(int maxRetry) {
-        return maxRetry;
+    public RemoteRequester(String proxyHost, int proxyPort) {
+        this(proxyHost, proxyPort, 0);
+    }
+
+    public RemoteRequester(String proxyHost, int proxyPort, String username, String password, int maxNumOfRetry) {
+        super(null);
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.maxNumOfRetry = maxNumOfRetry;
+        ProxyAuthenticator.getInstance().addAuthentication(proxyHost, proxyPort, username, password);
+    }
+
+    public RemoteRequester(String proxyHost, int proxyPort, String username, String password) {
+        this(proxyHost, proxyPort, username, password, 0);
     }
 
     @Override
@@ -62,7 +64,7 @@ public class RemoteRequester extends Requester {
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
         int numOfRetry = 0;
-        while (numOfRetry < maxNumOfRetry) {
+        while (numOfRetry <= maxNumOfRetry) {
             try {
                 Connection.Response jsoupResponse = jsoupConnection.execute();
                 return new Response(jsoupResponse);
