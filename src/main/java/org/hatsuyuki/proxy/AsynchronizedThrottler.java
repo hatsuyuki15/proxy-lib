@@ -10,15 +10,13 @@ import java.util.concurrent.TimeUnit;
  * Created by Hatsuyuki on 12/15/2016.
  */
 public class AsynchronizedThrottler extends Throttler {
-    private EvictingQueue<Date> lastRequestDateQueue;
-    private int maxRequestsPerInterval;
+    private EvictingQueue<Date> requestDateHistory;
     private long interval;
 
     public AsynchronizedThrottler(Pipeline nextPipeline, int maxRequestsPerInterval, long interval, TimeUnit timeUnit) {
         super(nextPipeline);
-        this.maxRequestsPerInterval = maxRequestsPerInterval;
         this.interval = TimeUnit.MILLISECONDS.convert(interval, timeUnit);
-        this.lastRequestDateQueue = EvictingQueue.create(maxRequestsPerInterval);
+        this.requestDateHistory = EvictingQueue.create(maxRequestsPerInterval); // only keep k (=maxRequestsPerInterval) most recent request dates
     }
 
     @Override
@@ -26,17 +24,17 @@ public class AsynchronizedThrottler extends Throttler {
         long waitTime;
         synchronized (this) {
             Date now = new Date();
-            Date requestDate = lastRequestDateQueue.peek();
-            if (requestDate == null) {
+            Date oldestRequestDate = requestDateHistory.peek();
+            if (oldestRequestDate == null) {
                 waitTime = 0;
             } else {
-                long passageTime = now.getTime() - requestDate.getTime();
-                waitTime = passageTime > interval
+                long elapsedTime = now.getTime() - oldestRequestDate.getTime();
+                waitTime = elapsedTime > interval
                          ? 0
-                         : interval - passageTime;
+                         : interval - elapsedTime;
             }
             Date scheduledDate = new Date(now.getTime() + waitTime);
-            lastRequestDateQueue.offer(scheduledDate);
+            requestDateHistory.offer(scheduledDate);
         }
 
         if (waitTime > 0) {
