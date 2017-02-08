@@ -1,6 +1,5 @@
 package org.hatsuyuki.proxy;
 
-import org.hatsuyuki.proxy.Response;
 import org.jsoup.Connection;
 
 /**
