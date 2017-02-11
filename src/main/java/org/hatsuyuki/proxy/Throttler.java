@@ -13,9 +13,11 @@ public class Throttler extends Pipeline {
     private EvictingQueue<Date> requestDateHistory;
     private long interval;
     private long timeout;
+    private long maxRequestsPerInterval;
 
     public Throttler(Pipeline nextPipeline, int maxRequestsPerInterval, long interval, long timeout, TimeUnit timeUnit) {
         super(nextPipeline);
+        this.maxRequestsPerInterval = maxRequestsPerInterval;
         this.timeout = TimeUnit.MILLISECONDS.convert(timeout, timeUnit);
         this.interval = TimeUnit.MILLISECONDS.convert(interval, timeUnit);
         this.requestDateHistory = EvictingQueue.create(maxRequestsPerInterval); // only keep k (=maxRequestsPerInterval) most recent request dates
@@ -29,12 +31,13 @@ public class Throttler extends Pipeline {
     public Response forward(Request request) throws IOException {
         long waitTime;
         synchronized (this) {
-            // compute waitTime
             Date now = new Date();
-            Date oldestRequestDate = requestDateHistory.peek();
-            if (oldestRequestDate == null) {
+
+            // compute waitTime
+            if (requestDateHistory.size() < maxRequestsPerInterval) {
                 waitTime = 0;
             } else {
+                Date oldestRequestDate = requestDateHistory.peek();
                 long elapsedTime = now.getTime() - oldestRequestDate.getTime();
                 waitTime = elapsedTime > interval
                          ? 0
