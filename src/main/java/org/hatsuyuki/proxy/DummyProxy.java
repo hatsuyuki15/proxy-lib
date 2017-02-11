@@ -6,7 +6,7 @@ import org.jsoup.Connection;
 /**
  * Created by Hatsuyuki on 12/27/2016.
  */
-public class DummyProxy extends AbstractProxy {
+public class DummyProxy extends Proxy {
     private Pipeline pipeline = new LocalRequester();
 
     @Override
