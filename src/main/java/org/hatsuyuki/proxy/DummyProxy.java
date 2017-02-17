@@ -14,11 +14,6 @@ public class DummyProxy extends Proxy {
         Request request = new Request(jsoupConnection);
         request.source = "local";
         Response response = pipeline.forward(request);
-
-        if (response.statusCode != 200) {
-            throw new NetworkError(String.format("HTTP Code = %s | Message = %s", response.statusCode, response.statusMessage));
-        }
-
         return response;
     }
 }

@@ -61,10 +61,6 @@ public class RealProxy extends Proxy {
             socket.shutdownInput();
             socket.close();
 
-            if (response.statusCode != 200) {
-                throw new NetworkError(String.format("HTTP Code = %s | Message = %s", response.statusCode, response.statusMessage));
-            }
-
             return response;
         } finally {
             if (socket != null && !socket.isClosed()) {

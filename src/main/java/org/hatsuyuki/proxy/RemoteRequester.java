@@ -63,23 +63,6 @@ public class RemoteRequester extends Requester {
         }
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
-        int numOfRetry = 0;
-        while (numOfRetry <= maxNumOfRetry) {
-            try {
-                Connection.Response jsoupResponse = jsoupConnection.execute();
-                return new Response(jsoupResponse);
-            } catch (HttpStatusException e) {
-                Response response = new Response();
-                response.statusCode = e.getStatusCode();
-                response.statusMessage = e.getMessage();
-                return response;
-            } catch (IOException e) {
-                LOGGER.info(e.getMessage() + " -> RETRY");
-            }
-            numOfRetry++;
-        }
-
-        // excess max number of retries
-        throw new IOException(String.format("Unable to complete the request within %d retries", maxNumOfRetry));
+        return new Response(jsoupConnection.execute());
     }
 }
