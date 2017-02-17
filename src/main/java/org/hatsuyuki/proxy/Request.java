@@ -20,6 +20,7 @@ public class Request {
     public List<KeyVal> data;
     public Map<String, String> headers;
     public Map<String, String> cookies;
+    public boolean followRedirects;
     public String source;
     public int priority;
 
@@ -37,6 +38,7 @@ public class Request {
         this.cookies           = args.cookies();
         this.requestBody       = args.requestBody();
         this.data              = new ArrayList<>();
+        this.followRedirects   = args.followRedirects();
         for (Connection.KeyVal keyVal: args.data()) {
             data.add(new KeyVal(keyVal.key(), keyVal.value()));
         }

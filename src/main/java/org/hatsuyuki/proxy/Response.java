@@ -2,6 +2,7 @@ package org.hatsuyuki.proxy;
 
 import org.jsoup.Connection;
 
+import java.net.URL;
 import java.util.Map;
 
 /**

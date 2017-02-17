@@ -7,4 +7,6 @@ public abstract class Requester extends Pipeline {
     public Requester(Pipeline nextPipeline) {
         super(nextPipeline);
     }
+
+
 }
