@@ -61,6 +61,10 @@ public class RealProxy extends Proxy {
             socket.shutdownInput();
             socket.close();
 
+            if (response != null) {
+                response.request(request);
+            }
+
             return response;
         } finally {
             if (socket != null && !socket.isClosed()) {

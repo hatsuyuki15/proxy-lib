@@ -1,5 +1,6 @@
 package org.hatsuyuki.proxy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jsoup.Connection;
 
 import java.net.URL;
@@ -16,6 +17,9 @@ public class Response {
     public Map<String, String> headers;
     public Map<String, String> cookies;
 
+    @JsonIgnore
+    public Request request;
+
     Response() {}
 
     public Response(Connection.Response jsoupResponse) {
@@ -25,5 +29,63 @@ public class Response {
         this.body          = jsoupResponse.body();
         this.headers       = jsoupResponse.headers();
         this.cookies       = jsoupResponse.cookies();
+    }
+
+    public int statusCode() {
+        return statusCode;
+    }
+
+    public void statusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String statusMessage() {
+        return statusMessage;
+    }
+
+    public void statusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    public String contentType() {
+        return contentType;
+    }
+
+    public void contentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String body() {
+        return body;
+    }
+
+    public void body(String body) {
+        this.body = body;
+    }
+
+    public Map<String, String> headers() {
+        return headers;
+    }
+
+    public void headers(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
+    public Map<String, String> cookies() {
+        return cookies;
+    }
+
+    public void cookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
+
+    @JsonIgnore
+    public Request request() {
+        return request;
+    }
+
+    @JsonIgnore
+    public void request(Request request) {
+        this.request = request;
     }
 }

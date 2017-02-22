@@ -14,6 +14,7 @@ public class DummyProxy extends Proxy {
         Request request = new Request(jsoupConnection);
         request.source = "local";
         Response response = pipeline.forward(request);
+        response.request(request);
         return response;
     }
 }
