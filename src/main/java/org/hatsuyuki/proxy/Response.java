@@ -2,6 +2,8 @@ package org.hatsuyuki.proxy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.Map;
@@ -87,5 +89,10 @@ public class Response {
     @JsonIgnore
     public void request(Request request) {
         this.request = request;
+    }
+
+    @JsonIgnore
+    public Document parse() {
+        return Jsoup.parse(this.body);
     }
 }
