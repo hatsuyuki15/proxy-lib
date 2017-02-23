@@ -11,10 +11,6 @@ public class DummyProxy extends Proxy {
 
     @Override
     public Response request(Connection jsoupConnection) throws Exception {
-        Request request = new Request(jsoupConnection);
-        request.source = "local";
-        Response response = pipeline.forward(request);
-        response.request(request);
-        return response;
+        return new Response(jsoupConnection.execute());
     }
 }
