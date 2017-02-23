@@ -34,6 +34,7 @@ public class LocalRequester extends Requester {
                 .ignoreHttpErrors(request.ignoreHttpErrors)
                 .timeout(request.timeout)
                 .maxBodySize(request.maxBodySize)
+                .followRedirects(request.followRedirects())
                 .cookies(request.cookies)
                 .requestBody(request.requestBody);
         if (request.headers != null) {
