@@ -63,6 +63,10 @@ public class RemoteRequester extends Requester {
         }
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
-        return new Response(jsoupConnection.execute());
+        try {
+            return new Response(jsoupConnection.execute());
+        } catch (IOException e) {
+            throw new IOException(String.format("Problem request %s through %s:%d", request.url(), this.proxyHost, this.proxyPort), e);
+        }
     }
 }

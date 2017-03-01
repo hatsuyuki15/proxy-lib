@@ -103,6 +103,8 @@ public class RemoteRequesterX extends Requester {
             response.cookies = cookies;
 
             return response;
+        } catch (IOException e) {
+            throw new IOException(String.format("Problem request %s through %s:%d", request.url(), this.host, this.port), e);
         } finally {
             httpResponse.close();
         }

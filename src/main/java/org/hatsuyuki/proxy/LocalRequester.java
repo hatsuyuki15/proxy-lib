@@ -46,6 +46,10 @@ public class LocalRequester extends Requester {
             jsoupConnection = jsoupConnection.data(keyVal.key, keyVal.value);
         }
 
-        return new Response(jsoupConnection.execute());
+        try {
+            return new Response(jsoupConnection.execute());
+        } catch (IOException e) {
+            throw new IOException(String.format("Problem request %s directly", request.url()), e);
+        }
     }
 }
