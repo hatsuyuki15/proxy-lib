@@ -3,7 +3,11 @@ package org.hatsuyuki.proxy;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -30,12 +34,23 @@ import java.util.stream.Collectors;
 public class RemoteRequesterX extends Requester {
     private String host;
     private int port;
+    private String username;
+    private String password;
 
     public RemoteRequesterX(String host, int port) {
         super(null);
         this.host = host;
         this.port = port;
     }
+
+    public RemoteRequesterX(String host, int port, String username, String password) {
+        super(null);
+        this.host = host;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+    }
+
 
     @Override
     public Response forward(Request request) throws IOException {
@@ -84,6 +99,13 @@ public class RemoteRequesterX extends Requester {
 
         //-- proxy
         builder.setProxy(new HttpHost(this.host, this.port));
+        if (this.username != null && this.password != null) {
+            Credentials credentials = new UsernamePasswordCredentials(this.username, this.password);
+            AuthScope authScope = new AuthScope(this.host, this.port);
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(authScope, credentials);
+            builder.setDefaultCredentialsProvider(credsProvider);
+        }
 
         CloseableHttpClient httpClient = builder.build();
         CloseableHttpResponse httpResponse = httpClient.execute(httpRequest, context);
