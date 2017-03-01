@@ -1,6 +1,5 @@
 package org.hatsuyuki.proxy;
 
-import org.hatsuyuki.proxy.exception.NetworkError;
 import org.jsoup.Connection;
 
 /**
@@ -10,7 +9,7 @@ public class DummyProxy extends Proxy {
     private Pipeline pipeline = new LocalRequester();
 
     @Override
-    public Response request(Connection jsoupConnection) throws Exception {
+    public Response request(Connection jsoupConnection, int timeout) throws Exception {
         return new Response(jsoupConnection.execute());
     }
 }

@@ -2,7 +2,6 @@ package org.hatsuyuki.proxy;
 
 import org.apache.commons.io.IOUtils;
 import org.hatsuyuki.Json;
-import org.hatsuyuki.proxy.exception.NetworkError;
 import org.jsoup.Connection;
 
 import java.io.InputStream;
@@ -18,8 +17,6 @@ public class RealProxy extends Proxy {
     private String host;
     private int port;
     private String clientID;
-
-    private int timeout = 600 * 1000; // default timeout is 10 minutes
 
     public RealProxy(String host, int port, String clientID) throws Exception {
         this.host = host;
@@ -40,7 +37,8 @@ public class RealProxy extends Proxy {
         return true;
     }
 
-    public Response request(Connection jsoupConnection)throws Exception {
+    @Override
+    public Response request(Connection jsoupConnection, int timeout)throws Exception {
         Socket socket = null;
         try {
             socket = new Socket();
