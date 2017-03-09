@@ -126,7 +126,7 @@ public class RemoteRequesterX extends Requester {
 
             return response;
         } catch (IOException e) {
-            throw new IOException(String.format("Problem request %s through %s:%d", request.url(), this.host, this.port), e);
+            throw new IOException(String.format("request=[%s] proxy=[%s:%d] error=[%s]", request.url(), this.host, this.port, e.getMessage()), e);
         } finally {
             httpResponse.close();
         }

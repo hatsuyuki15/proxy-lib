@@ -2,6 +2,8 @@ package org.hatsuyuki.proxy;
 
 import org.hatsuyuki.Json;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +18,7 @@ public class ProxyServer extends Thread {
     private int port;
     private Pipeline pipeline;
     private final String ENCODING = "UTF-8";
+    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ProxyServer(int port, Pipeline pipeline) {
         this.port = port;
@@ -60,7 +63,7 @@ public class ProxyServer extends Thread {
                     client.shutdownOutput();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error("Problem processing request", e);
             } finally {
                 try { client.close(); } catch (IOException ignored) { }
             }

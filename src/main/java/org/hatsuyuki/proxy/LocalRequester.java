@@ -49,7 +49,7 @@ public class LocalRequester extends Requester {
         try {
             return new Response(jsoupConnection.execute());
         } catch (IOException e) {
-            throw new IOException(String.format("Problem request %s directly", request.url()), e);
+            throw new IOException(String.format("request=[%s] proxy=[LOCAL] error=[%s]", request.url(), e.getMessage()), e);
         }
     }
 }
