@@ -63,7 +63,7 @@ public class ProxyServer extends Thread {
                     client.shutdownOutput();
                 }
             } catch (Exception e) {
-                LOGGER.error("Problem processing request", e);
+                LOGGER.error(e.getMessage(), e);
             } finally {
                 try { client.close(); } catch (IOException ignored) { }
             }
