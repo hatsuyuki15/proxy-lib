@@ -115,7 +115,7 @@ public class RemoteRequesterX extends Requester {
         CloseableHttpResponse httpResponse = httpClient.execute(httpRequest, context);
 
         try {
-            logger.debug("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort);
+            logger.debug(String.format("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort));
 
             HttpEntity entity = httpResponse.getEntity();
 

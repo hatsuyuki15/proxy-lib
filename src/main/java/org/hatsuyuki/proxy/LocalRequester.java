@@ -40,7 +40,7 @@ public class LocalRequester extends Requester {
         }
 
         try {
-            logger.debug("request=[%s] proxy=[LOCAL]", request.url());
+            logger.debug(String.format("request=[%s] proxy=[LOCAL]", request.url()));
             return new Response(jsoupConnection.execute());
         } catch (IOException e) {
             throw new IOException(String.format("request=[%s] proxy=[LOCAL] error=[%s]", request.url(), e.getMessage()), e);
