@@ -19,6 +19,8 @@ import org.apache.http.impl.client.*;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Connection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,21 +34,23 @@ import java.util.stream.Collectors;
  * Created by Hatsuyuki on 2017/02/17.
  */
 public class RemoteRequesterX extends Requester {
-    private String host;
-    private int port;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private String proxyHost;
+    private int proxyPort;
     private String username;
     private String password;
 
-    public RemoteRequesterX(String host, int port) {
+    public RemoteRequesterX(String proxyHost, int proxyPort) {
         super(null);
-        this.host = host;
-        this.port = port;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
     }
 
-    public RemoteRequesterX(String host, int port, String username, String password) {
+    public RemoteRequesterX(String proxyHost, int proxyPort, String username, String password) {
         super(null);
-        this.host = host;
-        this.port = port;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
         this.username = username;
         this.password = password;
     }
@@ -98,10 +102,10 @@ public class RemoteRequesterX extends Requester {
                 .setRedirectStrategy(request.followRedirects ? new LaxRedirectStrategy() : new DefaultRedirectStrategy());
 
         //-- proxy
-        builder.setProxy(new HttpHost(this.host, this.port));
+        builder.setProxy(new HttpHost(this.proxyHost, this.proxyPort));
         if (this.username != null && this.password != null) {
             Credentials credentials = new UsernamePasswordCredentials(this.username, this.password);
-            AuthScope authScope = new AuthScope(this.host, this.port);
+            AuthScope authScope = new AuthScope(this.proxyHost, this.proxyPort);
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(authScope, credentials);
             builder.setDefaultCredentialsProvider(credsProvider);
@@ -111,6 +115,8 @@ public class RemoteRequesterX extends Requester {
         CloseableHttpResponse httpResponse = httpClient.execute(httpRequest, context);
 
         try {
+            logger.debug("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort);
+
             HttpEntity entity = httpResponse.getEntity();
 
             //-- response
@@ -126,7 +132,7 @@ public class RemoteRequesterX extends Requester {
 
             return response;
         } catch (IOException e) {
-            throw new IOException(String.format("request=[%s] proxy=[%s:%d] error=[%s]", request.url(), this.host, this.port, e.getMessage()), e);
+            throw new IOException(String.format("request=[%s] proxy=[%s:%d] error=[%s]", request.url(), this.proxyHost, this.proxyPort, e.getMessage()), e);
         } finally {
             httpResponse.close();
         }

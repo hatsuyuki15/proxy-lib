@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by Hatsuyuki.
  */
 public class RemoteRequester extends Requester {
-    private final static Logger LOGGER = LoggerFactory.getLogger(RemoteRequester.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final int maxNumOfRetry;
 
@@ -64,6 +64,7 @@ public class RemoteRequester extends Requester {
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
         try {
+            logger.debug("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort);
             return new Response(jsoupConnection.execute());
         } catch (IOException e) {
             throw new IOException(String.format("request=[%s] proxy=[%s:%d] error=[%s]", request.url(), this.proxyHost, this.proxyPort, e.getMessage()), e);

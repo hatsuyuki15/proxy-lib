@@ -13,18 +13,11 @@ import java.util.Map;
  * Created by Hatsuyuki.
  */
 public class LocalRequester extends Requester {
-    private final static Logger LOGGER = LoggerFactory.getLogger(LocalRequester.class);
-    private int maxNumOfRetry;
-
-    public LocalRequester(int maxNumOfRetry) {
-        super(null);
-        this.maxNumOfRetry = maxNumOfRetry;
-    }
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public LocalRequester() {
-        this(0);
+        super(null);
     }
-
 
     @Override
     public Response forward(Request request) throws IOException {
@@ -47,6 +40,7 @@ public class LocalRequester extends Requester {
         }
 
         try {
+            logger.debug("request=[%s] proxy=[LOCAL]", request.url());
             return new Response(jsoupConnection.execute());
         } catch (IOException e) {
             throw new IOException(String.format("request=[%s] proxy=[LOCAL] error=[%s]", request.url(), e.getMessage()), e);
