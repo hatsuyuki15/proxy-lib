@@ -22,7 +22,7 @@ public class Response {
     @JsonIgnore
     public Request request;
 
-    Response() {}
+    public Response() {}
 
     public Response(Connection.Response jsoupResponse) {
         this.statusCode    = jsoupResponse.statusCode();
