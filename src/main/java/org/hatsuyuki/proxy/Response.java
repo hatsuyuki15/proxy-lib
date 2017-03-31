@@ -5,7 +5,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.net.URL;
 import java.util.Map;
 
 /**
@@ -18,6 +17,7 @@ public class Response {
     public String body;
     public Map<String, String> headers;
     public Map<String, String> cookies;
+    public String url;
 
     @JsonIgnore
     public Request request;
@@ -31,6 +31,7 @@ public class Response {
         this.body          = jsoupResponse.body();
         this.headers       = jsoupResponse.headers();
         this.cookies       = jsoupResponse.cookies();
+        this.url           = jsoupResponse.url().toString();
     }
 
     public int statusCode() {
@@ -79,6 +80,14 @@ public class Response {
 
     public void cookies(Map<String, String> cookies) {
         this.cookies = cookies;
+    }
+
+    public String url() {
+        return this.url;
+    }
+
+    public void url(String url) {
+        this.url = url;
     }
 
     @JsonIgnore
