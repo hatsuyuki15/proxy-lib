@@ -29,7 +29,8 @@ public class LocalRequester extends Requester {
                 .maxBodySize(request.maxBodySize)
                 .followRedirects(request.followRedirects())
                 .cookies(request.cookies)
-                .requestBody(request.requestBody);
+                .requestBody(request.requestBody)
+                .ignoreHttpErrors(true);
         if (request.headers != null) {
             for (Map.Entry<String, String> h: request.headers.entrySet()) {
                 jsoupConnection.header(h.getKey(), h.getValue());

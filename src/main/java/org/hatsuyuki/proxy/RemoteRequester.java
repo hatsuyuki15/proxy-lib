@@ -1,7 +1,6 @@
 package org.hatsuyuki.proxy;
 
 import org.jsoup.Connection;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,8 @@ public class RemoteRequester extends Requester {
                 .timeout(request.timeout)
                 .maxBodySize(request.maxBodySize)
                 .cookies(request.cookies)
-                .requestBody(request.requestBody);
+                .requestBody(request.requestBody)
+                .ignoreHttpErrors(true);
         if (request.headers != null) {
             for (Map.Entry<String, String> h: request.headers.entrySet()) {
                 jsoupConnection.header(h.getKey(), h.getValue());

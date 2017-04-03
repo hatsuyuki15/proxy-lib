@@ -1,5 +1,6 @@
 package org.hatsuyuki.proxy;
 
+import com.google.common.base.Throwables;
 import org.hatsuyuki.Json;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -49,19 +50,35 @@ public class ProxyServer extends Thread {
         @Override
         public void run() {
             try {
+                // input
                 InputStream in = client.getInputStream();
                 String jsonRequest = IOUtils.toString(in, ENCODING);
                 Request request = Json.parse(jsonRequest, Request.class);
                 client.shutdownInput();
 
-                if (request != null) {
-                    Response response = pipeline.forward(request);
-
-                    OutputStream out = client.getOutputStream();
-                    String jsonResponse = Json.toString(response);
-                    IOUtils.write(jsonResponse, out, ENCODING);
-                    client.shutdownOutput();
+                // process
+                Response response;
+                if (request == null) {
+                    response = new Response();
+                    response.statusCode(-1);
+                    response.statusMessage("Invalid request");
+                    response.body(jsonRequest);
+                } else {
+                    try {
+                        response = pipeline.forward(request);
+                    } catch (Exception e) {
+                        response = new Response();
+                        response.statusCode(-1);
+                        response.statusMessage(e.getMessage());
+                        response.body(Throwables.getStackTraceAsString(e));
+                    }
                 }
+
+                // output
+                OutputStream out = client.getOutputStream();
+                String jsonResponse = Json.toString(response);
+                IOUtils.write(jsonResponse, out, ENCODING);
+                client.shutdownOutput();
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             } finally {
