@@ -11,14 +11,14 @@ public class Pool extends Splitter {
     private Map<Pipeline, Integer> activeConnectionCountMap = new HashMap<>();
     private Map<Pipeline, Date> lastUsedTimeMap = new HashMap<>();
     private Set<Pipeline> blockedPipelines = new HashSet<>();
-    private BlockPolicy blockPolicy = new BlockPolicy() {
+    private BlockingPolicy blockingPolicy = new BlockingPolicy() {
         @Override
-        public long getBlockTime() {
+        public long getBlockingDuration() {
             return 0;
         }
 
         @Override
-        public boolean shouldBlock(Response response) {
+        public boolean match(Response response) {
             return false;
         }
     };
@@ -29,8 +29,8 @@ public class Pool extends Splitter {
         lastUsedTimeMap.put(pipeline, new Date());
     }
 
-    public void setBlockPolicy(BlockPolicy blockPolicy) {
-        this.blockPolicy = blockPolicy;
+    public void setBlockingPolicy(BlockingPolicy blockingPolicy) {
+        this.blockingPolicy = blockingPolicy;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Pool extends Splitter {
             activeConnectionCountMap.put(pipeline, activeConnection);
         }
 
-        if (blockPolicy.shouldBlock(response)) {
+        if (blockingPolicy.match(response)) {
             blockedPipelines.add(pipeline);
         }
 
@@ -64,7 +64,7 @@ public class Pool extends Splitter {
             long now = new Date().getTime();
             long lastUsedTime = lastUsedTimeMap.get(pipe).getTime();
             long elapsedTime = now - lastUsedTime;
-            return elapsedTime >= blockPolicy.getBlockTime();
+            return elapsedTime >= blockingPolicy.getBlockingDuration();
         });
 
         Pipeline bestPipeline =  pipelines.stream()
@@ -89,9 +89,9 @@ public class Pool extends Splitter {
         return bestPipeline;
     }
 
-    public interface BlockPolicy {
-        long getBlockTime();
-        boolean shouldBlock(Response response);
+    public interface BlockingPolicy {
+        long getBlockingDuration();
+        boolean match(Response response);
     }
 
 }
