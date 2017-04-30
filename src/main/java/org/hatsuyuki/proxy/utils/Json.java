@@ -1,4 +1,4 @@
-package org.hatsuyuki;
+package org.hatsuyuki.proxy.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
