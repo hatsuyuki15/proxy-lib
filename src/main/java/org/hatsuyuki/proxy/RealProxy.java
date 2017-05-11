@@ -39,7 +39,7 @@ public class RealProxy extends Proxy {
     }
 
     @Override
-    public Response request(Connection jsoupConnection)throws Exception {
+    public Response request(Connection jsoupConnection) throws Exception {
         Socket socket = null;
         try {
             int timeout = jsoupConnection.request().timeout();
@@ -61,11 +61,13 @@ public class RealProxy extends Proxy {
             socket.shutdownInput();
             socket.close();
 
-            if (response != null) {
+            if (response == null) {
+                throw new Exception("Unexpected exception. RESPONSE is null while RAW RESPONSE is '" + jsonResponse + "'");
+            } else {
+                // add pointer to the corresponding request
                 response.request(request);
+                return response;
             }
-
-            return response;
         } finally {
             if (socket != null && !socket.isClosed()) {
                 socket.close();
