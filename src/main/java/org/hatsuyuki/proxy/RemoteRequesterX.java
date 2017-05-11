@@ -8,6 +8,7 @@ import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -110,6 +111,14 @@ public class RemoteRequesterX extends Requester {
             credsProvider.setCredentials(authScope, credentials);
             builder.setDefaultCredentialsProvider(credsProvider);
         }
+
+        //-- timeout
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setSocketTimeout(request.timeout())
+                .setConnectTimeout(request.timeout())
+                .setConnectionRequestTimeout(request.timeout())
+                .build();
+        httpRequest.setConfig(requestConfig);
 
         CloseableHttpClient httpClient = builder.build();
         CloseableHttpResponse httpResponse = httpClient.execute(httpRequest, context);
