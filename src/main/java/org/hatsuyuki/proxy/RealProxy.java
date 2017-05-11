@@ -17,6 +17,7 @@ public class RealProxy extends Proxy {
     private String host;
     private int port;
     private String clientID;
+    private int DEFAULT_TIMEOUT = 60000;
 
     public RealProxy(String host, int port, String clientID) throws Exception {
         this.host = host;
@@ -38,9 +39,10 @@ public class RealProxy extends Proxy {
     }
 
     @Override
-    public Response request(Connection jsoupConnection, int timeout)throws Exception {
+    public Response request(Connection jsoupConnection)throws Exception {
         Socket socket = null;
         try {
+            int timeout = jsoupConnection.request().timeout();
             socket = new Socket();
             socket.setSoTimeout(timeout);
             socket.connect(new InetSocketAddress(host, port), timeout);

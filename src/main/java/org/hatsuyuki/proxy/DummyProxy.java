@@ -9,7 +9,7 @@ public class DummyProxy extends Proxy {
     private Pipeline pipeline = new LocalRequester();
 
     @Override
-    public Response request(Connection jsoupConnection, int timeout) throws Exception {
+    public Response request(Connection jsoupConnection) throws Exception {
         return new Response(jsoupConnection.execute());
     }
 }
