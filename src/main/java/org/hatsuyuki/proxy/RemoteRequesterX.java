@@ -133,6 +133,12 @@ public class RemoteRequesterX extends Requester {
             response.statusCode = httpResponse.getStatusLine().getStatusCode();
             response.body = IOUtils.toString(entity.getContent(), "UTF-8");
             response.headers = request.headers;
+            List<URI> locations = context.getRedirectLocations();
+            if (locations != null) {
+                response.url = locations.get(locations.size() - 1).toString();
+            } else {
+                response.url = request.url;
+            }
             Map<String, String> cookies = new HashMap<>();
             for (Cookie cookie : context.getCookieStore().getCookies()) {
                 cookies.put(cookie.getName(), cookie.getValue());
