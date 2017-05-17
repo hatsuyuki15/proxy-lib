@@ -144,6 +144,8 @@ public class RemoteRequesterX extends Requester {
                 cookies.put(cookie.getName(), cookie.getValue());
             }
             response.cookies = cookies;
+            response.metadata = new HashMap<>();
+            response.metadata.put("ip", this.proxyHost + ":" + this.proxyPort);
 
             return response;
         } catch (IOException e) {

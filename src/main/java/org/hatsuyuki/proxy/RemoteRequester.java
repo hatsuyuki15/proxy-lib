@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -65,7 +66,10 @@ public class RemoteRequester extends Requester {
 
         try {
             logger.debug(String.format("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort));
-            return new Response(jsoupConnection.execute());
+            Response response = new Response(jsoupConnection.execute());
+            response.metadata = new HashMap<>();
+            response.metadata.put("ip", this.proxyHost + ":" + this.proxyPort);
+            return response;
         } catch (IOException e) {
             throw new IOException(String.format("request=[%s] proxy=[%s:%d] error=[%s]", request.url(), this.proxyHost, this.proxyPort, e.getMessage()), e);
         }

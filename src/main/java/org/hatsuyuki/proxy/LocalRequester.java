@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,7 +43,9 @@ public class LocalRequester extends Requester {
 
         try {
             logger.debug(String.format("request=[%s] proxy=[LOCAL]", request.url()));
-            return new Response(jsoupConnection.execute());
+            Response response = new Response(jsoupConnection.execute());
+            response.metadata = new HashMap<>();
+            return response;
         } catch (IOException e) {
             throw new IOException(String.format("request=[%s] proxy=[LOCAL] error=[%s]", request.url(), e.getMessage()), e);
         }

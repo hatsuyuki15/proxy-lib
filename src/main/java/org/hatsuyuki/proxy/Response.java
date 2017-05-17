@@ -17,6 +17,7 @@ public class Response {
     public String body;
     public Map<String, String> headers;
     public Map<String, String> cookies;
+    public Map<String, String> metadata;
     public String url;
 
     @JsonIgnore
@@ -80,6 +81,14 @@ public class Response {
 
     public void cookies(Map<String, String> cookies) {
         this.cookies = cookies;
+    }
+
+    public Map<String, String> metadata() {
+        return metadata;
+    }
+
+    public void metadata(Map<String, String> metadata) {
+        this.metadata = metadata;
     }
 
     public String url() {
