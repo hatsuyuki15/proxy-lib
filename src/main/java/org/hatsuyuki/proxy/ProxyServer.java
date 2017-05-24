@@ -1,5 +1,6 @@
 package org.hatsuyuki.proxy;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 import org.hatsuyuki.proxy.utils.Json;
 import org.apache.commons.io.IOUtils;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hatsuyuki.
@@ -65,7 +67,9 @@ public class ProxyServer extends Thread {
                     response.body(jsonRequest);
                 } else {
                     try {
+                        Stopwatch stopwatch = Stopwatch.createStarted();
                         response = pipeline.forward(request);
+                        LOGGER.debug("req={} proxy={} reqTime={} totalTime={}", request.url(), response.metadata().get("ip"), response.metadata().get("requestTime"), stopwatch.elapsed(TimeUnit.SECONDS));
                     } catch (Exception e) {
                         response = new Response();
                         response.statusCode(-1);

@@ -1,5 +1,6 @@
 package org.hatsuyuki.proxy;
 
+import com.google.common.base.Stopwatch;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hatsuyuki.
@@ -65,9 +67,13 @@ public class RemoteRequester extends Requester {
         jsoupConnection = jsoupConnection.proxy(proxyHost, proxyPort);
 
         try {
-            logger.debug(String.format("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort));
-            Response response = new Response(jsoupConnection.execute());
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            Connection.Response rawResponse = jsoupConnection.execute();
+            stopwatch.stop();
+
+            Response response = new Response(rawResponse);
             response.metadata = new HashMap<>();
+            response.metadata.put("requestTime", String.valueOf(stopwatch.elapsed(TimeUnit.SECONDS)));
             response.metadata.put("ip", this.proxyHost + ":" + this.proxyPort);
             return response;
         } catch (IOException e) {

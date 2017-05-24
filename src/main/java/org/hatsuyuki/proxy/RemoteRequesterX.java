@@ -1,5 +1,6 @@
 package org.hatsuyuki.proxy;
 
+import com.google.common.base.Stopwatch;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -29,6 +30,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -124,8 +126,7 @@ public class RemoteRequesterX extends Requester {
         CloseableHttpResponse httpResponse = httpClient.execute(httpRequest, context);
 
         try {
-            logger.debug(String.format("request=[%s] proxy=[%s:%d]", request.url(), this.proxyHost, this.proxyPort));
-
+            Stopwatch stopwatch = Stopwatch.createStarted();
             HttpEntity entity = httpResponse.getEntity();
 
             //-- response
@@ -145,6 +146,7 @@ public class RemoteRequesterX extends Requester {
             }
             response.cookies = cookies;
             response.metadata = new HashMap<>();
+            response.metadata.put("requestTime", String.valueOf(stopwatch.elapsed(TimeUnit.SECONDS)));
             response.metadata.put("ip", this.proxyHost + ":" + this.proxyPort);
 
             return response;
