@@ -75,6 +75,7 @@ public class ProxyServer extends Thread {
                         response.statusCode(-1);
                         response.statusMessage(e.getMessage());
                         response.body(Throwables.getStackTraceAsString(e));
+                        LOGGER.error("Exception when handling req=" + request.url(), e);
                     }
                 }
 

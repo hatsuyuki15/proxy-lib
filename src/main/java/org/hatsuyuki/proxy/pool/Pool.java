@@ -3,6 +3,8 @@ package org.hatsuyuki.proxy.pool;
 import org.hatsuyuki.proxy.Pipeline;
 import org.hatsuyuki.proxy.Request;
 import org.hatsuyuki.proxy.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -11,6 +13,8 @@ import java.util.*;
  * Created by Hatsuyuki on 2017/04/25.
  */
 public class Pool extends Pipeline {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private Set<Pipeline> pipelines = new LinkedHashSet<>();
     private Map<Pipeline, Long> lastUsedTimeMap = new HashMap<>();
     private Set<Pipeline> blockedPipelines = new HashSet<>();
@@ -39,7 +43,16 @@ public class Pool extends Pipeline {
 
     @Override
     public Response forward(Request request) throws IOException {
-        Pipeline bestPipeline = selectionAlgorithm.selectBestPipeline(getAvailablePipelines());
+        Set<Pipeline> availablePipelines = getAvailablePipelines();
+        if (availablePipelines.isEmpty()) {
+            throw new IOException("No available pipelines at the moment. Possibly, all of them are being blocked.");
+        }
+
+        Pipeline bestPipeline = selectionAlgorithm.selectBestPipeline(availablePipelines);
+        if (bestPipeline == null) {
+            throw new IOException("No pipeline was selected. Something was wrong with the selection algorithm. Contact the author for more detail.");
+        }
+
         Response response = bestPipeline.forward(request);
         selectionAlgorithm.onResponseReceive(request, response, bestPipeline);
         checkPolicyAndBlock(bestPipeline, response);
