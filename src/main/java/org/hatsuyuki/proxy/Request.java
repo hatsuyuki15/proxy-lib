@@ -148,6 +148,14 @@ public class Request {
         this.priority = priority;
     }
 
+    public String requestBody() {
+        return requestBody;
+    }
+
+    public void requestBody(String requestBody) {
+        this.requestBody = requestBody;
+    }
+
     public static class KeyVal {
         public String key;
         public String value;

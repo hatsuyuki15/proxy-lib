@@ -1,4 +1,4 @@
-package org.hatsuyuki.proxy.utils;
+package org.hatsuyuki.proxy;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by Hatsuyuki.
  * Wrapper for Jackson library to make it behave like play.lib.json
  */
-public class Json {
+class Json {
     private static ObjectMapper mapper = new ObjectMapper();
 
 

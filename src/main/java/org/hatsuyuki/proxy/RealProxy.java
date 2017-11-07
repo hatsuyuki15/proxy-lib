@@ -1,7 +1,6 @@
 package org.hatsuyuki.proxy;
 
 import org.apache.commons.io.IOUtils;
-import org.hatsuyuki.proxy.utils.Json;
 import org.jsoup.Connection;
 
 import java.io.InputStream;
