@@ -17,7 +17,7 @@ public class LocalProxy extends Proxy {
     }
 
     @Override
-    public Response request(Connection jsoupConnection) throws Exception {
-        return pipeline.forward(new Request(jsoupConnection));
+    public Response request(Request request) throws Exception {
+        return pipeline.forward(request);
     }
 }

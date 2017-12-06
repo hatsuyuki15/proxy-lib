@@ -1,7 +1,6 @@
 package org.hatsuyuki.proxy;
 
 import org.apache.commons.io.IOUtils;
-import org.jsoup.Connection;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,15 +37,14 @@ public class RealProxy extends Proxy {
     }
 
     @Override
-    public Response request(Connection jsoupConnection) throws Exception {
+    public Response request(Request request) throws Exception {
         Socket socket = null;
         try {
-            int timeout = jsoupConnection.request().timeout();
+            int timeout = request.timeout();
             socket = new Socket();
             socket.setSoTimeout(timeout);
             socket.connect(new InetSocketAddress(host, port), timeout);
 
-            Request request = new Request(jsoupConnection);
             request.source = this.clientID;
 
             OutputStream out = socket.getOutputStream();
