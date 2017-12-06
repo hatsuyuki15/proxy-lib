@@ -1,5 +1,8 @@
 package org.hatsuyuki.proxy;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -12,7 +15,8 @@ import java.io.IOException;
  * Wrapper for Jackson library to make it behave like play.lib.json
  */
 class Json {
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = new ObjectMapper()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 
     public static ArrayNode newArray() {
