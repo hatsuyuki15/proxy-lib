@@ -23,6 +23,7 @@ public class Request {
     public boolean followRedirects;
     public String source;
     public int priority;
+    public Long sessionId;
 
     public Request() {}
 
@@ -154,6 +155,14 @@ public class Request {
 
     public void requestBody(String requestBody) {
         this.requestBody = requestBody;
+    }
+
+    public void sessonId(Long sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public Long sessionId() {
+        return sessionId;
     }
 
     public static class KeyVal {
